@@ -1,0 +1,5 @@
+src/
+*.jpg
+env.php
+*.zip
+uploads

@@ -1,0 +1,40 @@
+{
+    "remotePath": "./public_html/user.themelchizedekcenter.com/api",
+    "host": "theafricaeducationdirective.com",
+    "username": "q37nr4szx78z",
+    "password": "Safano1234",
+    "port": 21,
+    "secure": false,
+    "protocol": "ftp",
+    "uploadOnSave": false,
+    "passive": false,
+    "debug": false,
+    "privateKeyPath": null,
+    "passphrase": null,
+    "agent": null,
+    "allow": [],
+    "ignore": [
+        "\\.vscode",
+        "\\.git",
+        "\\.DS_Store",
+        "MTTC Video Compressed.mp4",
+        "cred.php",
+       
+        ".htaccess",
+       
+   
+       "stripe",
+       "dompdf",
+       "src",
+       "vendor",
+        "user_assignments_files",
+        "\\user_assignments_files"
+        
+    ],
+    "generatedFiles": {
+        "extensionsToInclude": [
+            "html","php","js","css","png"
+        ],
+        "path": ""
+    }
+}
