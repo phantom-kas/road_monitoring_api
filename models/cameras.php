@@ -48,12 +48,15 @@ class Camera extends  Db
         // dd( $params );
         // die();
       }
+
+      /// $this->addQwhere( ' && r.model_id = ?', [2] );
     $this->qLim  = 'Limit 25';
     $this->getFromLastIdInDecOrder('l.id');
     $data = $this->query("SELECT l.id,r.report,r.id as report_id,l.cam_id,l.created_at,l.date,l.image_url,l.location	
-    ,c.type
+    ,c.type , m.id as model_id
     from report_logs as l  inner join cameras as c
     inner join report as r on r.id = l.report_id
+     inner join model as m on m.id = r.model_id
       $this->qwhere
       $this->qOrder
       $this->qLim 
