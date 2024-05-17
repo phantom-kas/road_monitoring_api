@@ -158,6 +158,12 @@ function getBaseUrl($dir = __DIR__){
 function getDateTime(){
   return gmdate('Y-m-d H:i:s');
 }
+
+function getDateNow(){
+  return gmdate('Y-m-d');
+}
+
+
 function echoTimeZone(){
   //date_default_timezone_set("Africa/Accra");
   echo date_default_timezone_get();

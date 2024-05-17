@@ -29,7 +29,7 @@ class Camera extends  Db
       }
 
       if(isset($_GET['classes'])){
-        $where_clause = ' &&  l.report_id in (';
+        $where_clause = ' &&  r.id in (';
         $params = array();
         $ln = count($_GET['classes']);
         for ($i = 0; $i < $ln; $i++)  {
@@ -55,7 +55,7 @@ class Camera extends  Db
     $data = $this->query("SELECT l.id,r.report,r.id as report_id,l.cam_id,l.created_at,l.date,l.image_url,l.location	
     ,c.type , m.id as model_id
     from report_logs as l  inner join cameras as c
-    inner join report as r on r.id = l.report_id
+    inner join report as r on r.class_id = l.report_id
      inner join model as m on m.id = r.model_id
       $this->qwhere
       $this->qOrder
