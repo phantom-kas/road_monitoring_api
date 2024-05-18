@@ -190,6 +190,17 @@ function outPutDataWithImgUrlRoot($data,$die = true,$msg = 'success'){
       die();
 }
 
+function outPutDataWithUploadDir($data,$die = true,$msg = 'success'){
+  $output = servSus($msg);
+  $output['data'] = $data;
+  $output['upload_dir'] = pathUrl()."uploads/";
+  if(!$die){
+    return ;
+  }
+      output($output);
+      die();
+}
+
 
 
 

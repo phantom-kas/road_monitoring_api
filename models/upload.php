@@ -68,7 +68,7 @@ class Upload extends  Db
         if($this->storeReportLog(
           [$idata['class'][$i], $idata['cam_id'],
          getDateTime(), 
-         str_replace('.','',$idata['image_path'][$i]) ,$idata['location'][$i] ,$idata['class_id'][$i]
+         substr($idata['image_path'][$i],1) ,$idata['location'][$i] ,$idata['class_id'][$i]
           ,getDateTime(),$idata['model']])){
             if(isset($class_counts[$class] )){
               $class_counts[$class] = $class_counts[$class]  + 1;

@@ -61,7 +61,7 @@ class Camera extends  Db
       $this->qOrder
       $this->qLim 
     ",$this->qVars)->getRows();
-    outPutDataWithImgUrlRoot($data);
+    outPutDataWithUploadDir($data);
     die();
   }
 
