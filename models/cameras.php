@@ -53,7 +53,7 @@ class Camera extends  Db
     $this->qLim  = 'Limit 25';
     $this->getFromLastIdInDecOrder('l.id');
     $data = $this->query("SELECT l.id,r.report,r.id as report_id,l.cam_id,l.created_at,l.date,l.image_url,l.location	
-    ,c.type , m.id as model_id
+    ,c.type , m.id as model_id , l.box
     from report_logs as l  inner join cameras as c
     inner join report as r on r.class_id = l.report_id
      inner join model as m on m.id = r.model_id

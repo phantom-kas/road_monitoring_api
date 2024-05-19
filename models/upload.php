@@ -67,7 +67,8 @@ class Upload extends  Db
         [
           $idata['class'][$i], $idata['cam_id'],
           getDateTime(),
-          substr($idata['image_path'][$i], 1), $idata['location'][$i], $idata['class_id'][$i], getDateTime(), $idata['model']
+          substr($idata['image_path'][$i], 1), $idata['location'][$i], $idata['class_id'][$i], getDateTime(), $idata['model'],
+          $idata['box'][$i]
         ]
       )) {
         if (isset($class_counts[$class])) {
@@ -95,7 +96,7 @@ class Upload extends  Db
         );
       }
     }
-    output(servSus("Upload successfully"));
+    output([servSus("Upload successfully")]);
     die();
   }
 
@@ -107,8 +108,8 @@ class Upload extends  Db
     //INSERT INTO `report_logs` (`id`, `report`, `cam_id`, `created_at`, `date`, `image_url`, `location`, `report_id`, `report_time`) VALUES (NULL, '', '1', '2024-05-17 07:13:35.000000', '2024-05-01', 's', 's', '0', NULL);
     if ($this->query(
       "INSERT  INTO report_logs
-       (report ,cam_id ,date ,image_url ,location ,report_id ,created_at , model_id) 
-       VALUES (?,?,?,?,?,?,?,?)
+       (report ,cam_id ,date ,image_url ,location ,report_id ,created_at , model_id ,box) 
+       VALUES (?,?,?,?,?,?,?,?,?)
        ",
       $params
     )->lastId()) {
