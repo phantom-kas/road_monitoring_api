@@ -1,5 +1,5 @@
 <?php
-require "real_time_msg.php";
+require_once "real_time_msg.php";
 
 class WertcSignaling extends  Db
 {

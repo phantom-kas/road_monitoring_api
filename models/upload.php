@@ -1,4 +1,5 @@
 <?php
+require_once "real_time_msg.php";
 class Upload extends  Db
 {
   public function receiveFiles()
@@ -12,7 +13,7 @@ class Upload extends  Db
     $allowedTypes = [];
 
     $class_counts = [];
-
+    $pusherData = [];
     // Ensure the target directory exists
     if (!is_dir($targetDir)) {
       mkdir($targetDir, 0777, true);
@@ -24,31 +25,18 @@ class Upload extends  Db
       die();
     }
     $files = $_FILES['files']['tmp_name'];
-    // outPut($_FILES);die();
-    // Loop through each file
+
     for ($i = 0; $i < count($files); $i++) {
-      // Get the file details
-      // $classId=$idata['class_id'][$i];
+
       $fileName = basename($_FILES['files']['name'][$i]);
       $fileTmpPath = $_FILES['files']['tmp_name'][$i];
       $fileSize = $_FILES['files']['size'][$i];
       $fileType = $_FILES['files']['type'][$i];
       $fileError = $_FILES['files']['error'][$i];
 
-      // if(isset($class_counts['class_'.$classId])){
-      //   $class_counts['class_'.$classId] = $class_counts['class_'.$classId] + 1;
-      // }
-      // else{
-      //   $class_counts['class_'.$classId]= 1;
-      // }
-      // Set the target file path
+
       $targetFilePath = $targetDir . $fileName;
-      // Check for errors
-      // if ($fileError !== UPLOAD_ERR_OK) {
-      //   // Validate file size (example: max 5MB)
-      //   output(servError("The file $fileName exceeds the maximum allowed size.<br>"));
-      //   die();
-      // }
+
       $allowedTypes = ['image/jpeg', 'image/png', 'image/jpg', ""];
       if (!in_array($fileType, $allowedTypes)) {
         output(servError("The file type of $fileName is not allowed.<br>"));
@@ -63,19 +51,33 @@ class Upload extends  Db
     //$class_counts = [];
     for ($i = 0; $i < count($idata['class_id']); $i++) {
       $class = $idata['class'][$i] . '_' . $idata['class_id'][$i];
-      if ($this->storeReportLog(
+      $image = substr($idata['image_path'][$i], 1);
+      $lid = $this->storeReportLog(
         [
           $idata['class'][$i], $idata['cam_id'],
           getDateTime(),
-          substr($idata['image_path'][$i], 1), $idata['location'][$i], $idata['class_id'][$i], getDateTime(), $idata['model'],
+          $image, $idata['location'][$i], $idata['class_id'][$i], getDateTime(), $idata['model'],
           $idata['box'][$i]
         ]
-      )) {
+      );
+      if ($lid) {
         if (isset($class_counts[$class])) {
           $class_counts[$class] = $class_counts[$class]  + 1;
         } else {
           $class_counts[$class] = 1;
         }
+
+        array_push($pusherData,[
+          'class' => $idata['class'][$i],
+          'report_id' => $idata['class_id'][$i],
+          'box' => $idata['box'][$i],
+          'id' => $lid,
+          'date' =>getDateNow(),
+          'created_at' => getDateTime(),
+          'location' => $idata['location'][$i],
+          'image_url' =>$image,
+          'type'=>'sad'
+        ]);
       };
     }
 
@@ -92,10 +94,11 @@ class Upload extends  Db
       } else {
         $this->query(
           "INSERT INTO num_reports_per_day (date, class_id, model_id, updated_on,num) values (?,?,?,?,?)",
-          [getDateNow(), explode('_', $key)[1], $idata['model'], getDateTime(), 1]
+          [getDateNow(), explode('_', $key)[1], $idata['model'], getDateTime(), $value]
         );
       }
     }
+    $this->sendLogs($class_counts, $idata['model'], $idata['location'][0], $idata['cam_id'], $idata['image_path'][0], $pusherData);
     output([servSus("Upload successfully")]);
     die();
   }
@@ -119,7 +122,31 @@ class Upload extends  Db
   }
 
 
-  
+  protected function sendLogs($class_counts, $mid, $location, $cam_id, $image_url, $pusherData)
+  {
+    $data = [
+      ...$class_counts,
+      'model_id' => $mid,
+      'location' => $location,
+      'cam_id' => $cam_id,
+      'image_url' => $image_url,
+      'data' => $pusherData
+    ];
+
+
+    global $pusher;
+    $pusher->trigger('new_updates', 'msg', $data);
+    return true;
+  }
+
+
+  public function testPuser()
+  {
+
+    global $pusher;
+    $pusher->trigger('new_updates', 'msg', "HEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+    return true;
+  }
 }
 
 

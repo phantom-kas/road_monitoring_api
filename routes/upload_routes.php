@@ -11,6 +11,10 @@ class Upload_router extends Router{
         $Upload->receiveFiles();
         break;
       }
+       case 'txt':{
+        $Upload->testPuser();
+        break;
+      }
     }
   }
   }

@@ -72,14 +72,20 @@ class Camera extends  Db
   }
 
   public function getDashBoard(){
+
+    if(isset($_GET['model_id'])){
+      $this->addQwhere( " && np.model_id = ?", [$_GET['model_id']] );
+    }
+    $this->addQwhere( " &&  date between adddate(now(),-7) and now()" );
     $data = $this->query("SELECT r.report,np.num , np.date from num_reports_per_day as np
     inner join report as r on np.class_id = r.class_id and np.model_id = r.model_id
-    where date between adddate(now(),-7) and now()")->getRows();
+    ".  $this->qwhere,$this->qVars)->getRows();
     $date = getDateNow(); 
+    
     $todayData = $this->query("SELECT np.num,r.report from report as r
      left outer join
       num_reports_per_day as np on r.class_id = np.class_id
-       and r.model_id = np.model_id and np.date =?",[getDateNow()])->getRows();
+       and r.model_id = np.model_id and np.date =? where r.model_id = ?",[getDateNow() , $_GET['model_id']])->getRows();
     outPut(['today'=>$todayData,...servSus(),'data'=> $data,'datenow'=>$date]);
     die();
   }
