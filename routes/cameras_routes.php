@@ -21,6 +21,11 @@ class Camera_router extends Router
         $Camera->getDashBoard();
         break;
       }
+
+        case 'get_report_for':{
+        $Camera->getReportsFor();
+        break;
+      }
   }
 }
 }
