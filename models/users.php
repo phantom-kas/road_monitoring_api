@@ -133,7 +133,7 @@ class User extends Db
 
   public function getUserInfo($uid)
   {
-    return $this->query('SELECT user_name,lname,lname,created_at,id,is_blocked,profile_img_url FROM `users`
+    return $this->query('SELECT user_name,lname,fname,created_at,id,is_blocked,profile_img_url FROM `users`
     where id = ?
     ',  [$uid])->getRows();
   }
