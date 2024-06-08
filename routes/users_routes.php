@@ -42,19 +42,7 @@ class User_router extends Router{
 
       case "get_user_details":{
 
-        checkCheckGetParam('id');
-
-        if($_GET['id'] == $User->getUserIdFromAtoken()->id){
-
-        }
-
-        // else  if(!$User->checkCanEdithUsers($User->getUserIdFromAtoken()->id)){
-        //   forbid();
-        // }
-       
-        else{
-          $User->canP($User->getUserIdFromAtoken()->id , 'users');
-        }
+        
 
         output(array('data' =>$User->getUserInfo($_GET['id']),
    
@@ -70,10 +58,9 @@ class User_router extends Router{
         $idata = getDataInput();
         $uid = $idata['uid'];
          require_once './uploader.php';
-         $fname = $User->getImgUrl() ;
+         $fname = $User->getImgUrl($uid);
         if( $fname  == null || !file_exists("./src/assets/images/profileimages/$fname")){
           $fname = time(). $uid.'.png';
-        
         }
          $URL = pathUrl().IMG_fd.$fname.'.png';
         if(upload('file-input',$fname,"/profileimages",'./src/assets/images',false))

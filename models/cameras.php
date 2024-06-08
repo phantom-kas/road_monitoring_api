@@ -149,8 +149,6 @@ if(isset($_GET['model_id'])){
     $data = $this->query("SELECT r.model_id, np.num,r.report ,np.date from num_reports_per_day as np
     inner join
      report as r on r.class_id = np.class_id
-      
-
       $this->qwhere
       $this->qOrder
       $this->qLim 

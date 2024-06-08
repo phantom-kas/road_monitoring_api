@@ -387,67 +387,67 @@ class User extends Db
     die();
   }
 
-  public function getDAshC()
-  {
-    $uid = $this->getUserIdFromAtoken()->id;
-    $prem = $this->checkPremission(['student', 'payment', 'programs'], $uid);
-    if (count($prem) < 1) {
-      forbid();
-    }
-    $studs = [];
-    $pymts = [];
-    $progs = [];
+  // public function getDAshC()
+  // {
+  //   $uid = $this->getUserIdFromAtoken()->id;
+  //   $prem = $this->checkPremission(['student', 'payment', 'programs'], $uid);
+  //   if (count($prem) < 1) {
+  //     forbid();
+  //   }
+  //   $studs = [];
+  //   $pymts = [];
+  //   $progs = [];
 
-    $numAffs = [];
+  //   $numAffs = [];
 
-    $wwStu = [];
-
-
+  //   $wwStu = [];
 
 
 
-    $numWk = [];
-    $numSt = [];
-
-    $numdg = [];
-
-    // if($prem['student'] == 8){
-    $studs = $this->query("SELECT s.id FROM students as s inner join users as u on s.user_id = u.id where 1")->getRows();
-    // }
-
-    $wwStu = $this->query("SELECT u.created_at as enDt, u.id, u.fname , u.lname  , u.img_filename as img_nm, u.email
-     FROM users as u inner join user_programs as up on  up.user_id = u.id 
-     LEFT JOIN students as stu on stu.user_id = u.id where 1 && stu.id IS NULL  group by u.id limit 101")->getRows();
-
-    if ($prem[0]['programs'] == 8) {
-      $progs = $this->query("SELECT id FROM program where type = 'cert' limit 101 ")->getRows();
-    } else {
-      $progs = $this->query("SELECT p.id FROM program as p inner join user_programs_premissions as up on p.id = up.program_id where up.user_id = ? limit 101", [$uid])->getRows();
-    }
-
-    $pymts = $this->query("SELECT u.id FROM  users as u inner join students as s on u.id = s.user_id inner join user_programs as up on up.user_id = u.id where  up.status != 1  && up.status != 8 limit 101 ")->getRows();
-
-    $numAffs = $this->query("SELECT id from users where aflt = 1 limit 101 ")->getRows();
 
 
-    $ttCh = $this->query("SELECT total_fees from system where id = 1",)->getRows()[0]['total_fees'];
+  //   $numWk = [];
+  //   $numSt = [];
+
+  //   $numdg = [];
+
+  //   // if($prem['student'] == 8){
+  //   $studs = $this->query("SELECT s.id FROM students as s inner join users as u on s.user_id = u.id where 1")->getRows();
+  //   // }
+
+  //   $wwStu = $this->query("SELECT u.created_at as enDt, u.id, u.fname , u.lname  , u.img_filename as img_nm, u.email
+  //    FROM users as u inner join user_programs as up on  up.user_id = u.id 
+  //    LEFT JOIN students as stu on stu.user_id = u.id where 1 && stu.id IS NULL  group by u.id limit 101")->getRows();
+
+  //   if ($prem[0]['programs'] == 8) {
+  //     $progs = $this->query("SELECT id FROM program where type = 'cert' limit 101 ")->getRows();
+  //   } else {
+  //     $progs = $this->query("SELECT p.id FROM program as p inner join user_programs_premissions as up on p.id = up.program_id where up.user_id = ? limit 101", [$uid])->getRows();
+  //   }
+
+  //   $pymts = $this->query("SELECT u.id FROM  users as u inner join students as s on u.id = s.user_id inner join user_programs as up on up.user_id = u.id where  up.status != 1  && up.status != 8 limit 101 ")->getRows();
+
+  //   $numAffs = $this->query("SELECT id from users where aflt = 1 limit 101 ")->getRows();
 
 
-    $numdg =   $this->query("SELECT id FROM program where type = 'degree' limit 101 ")->getRows();
-    $numWk =   $this->query("SELECT id FROM program where type = 'wk_shp' limit 101 ")->getRows();
+  //   $ttCh = $this->query("SELECT total_fees from system where id = 1",)->getRows()[0]['total_fees'];
 
-    $output = servSus();
-    $output['overDue'] = count($pymts);
-    $output['num_students'] = count($studs) + count($wwStu);
 
-    $output['num_progs'] = count($progs);
-    $output['numAffs'] = count($numAffs);
-    $output['ttCh'] = $ttCh;
-    $output['numdg'] = count($numdg);
-    $output['numWk'] = count($numWk);
-    outPut($output);
-    die();
-  }
+  //   $numdg =   $this->query("SELECT id FROM program where type = 'degree' limit 101 ")->getRows();
+  //   $numWk =   $this->query("SELECT id FROM program where type = 'wk_shp' limit 101 ")->getRows();
+
+  //   $output = servSus();
+  //   $output['overDue'] = count($pymts);
+  //   $output['num_students'] = count($studs) + count($wwStu);
+
+  //   $output['num_progs'] = count($progs);
+  //   $output['numAffs'] = count($numAffs);
+  //   $output['ttCh'] = $ttCh;
+  //   $output['numdg'] = count($numdg);
+  //   $output['numWk'] = count($numWk);
+  //   outPut($output);
+  //   die();
+  // }
 
   public function getAllPremissions($uid)
   {
@@ -696,7 +696,10 @@ class User extends Db
   public function registerUser()
   {
     $this->getPostData();
-
+    $uuiid = $this->getUserIdFromAtoken()->id;
+    if(!$this->checkPrmission($uuiid,'add_user')){
+      forbid();
+    }
     $this->validateREquiredInputData(['fname', 'user_name', 'password', 'lname']);
     // echo 'test';
     $uuid = $this->getUserIdFromAtoken()->id;

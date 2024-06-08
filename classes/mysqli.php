@@ -384,9 +384,11 @@ if($dataType != null){
 
 	
 
-	public function checkPremission($premission,$uid){
-		if(is_array($premission)){$premission = implode(', ',$premission);}
-		return $this->query("SELECT $premission from premissions WHERE user_id = ? ",[$uid])->getRows();
+	public function checkPrmission($uid,$prem){
+		if(count($this->query("SELECT up.id from user_premissions as up inner join premissions as p on p.id = up.premission_id where up.user_id = ? and p.premission = ?",[$uid,$prem])->getRows()) > 0){
+			return true;
+		}
+		return false;
 	}
 
 	public function checkPremission2($premission,$uid){
